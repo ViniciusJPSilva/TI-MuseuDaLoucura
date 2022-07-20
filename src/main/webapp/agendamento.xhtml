@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<ui:composition template="_template.xhtml">
+	<ui:define name="corpo">
+		<h:outputScript name="jsf.js" library="javax.faces" target="head" />
+
+		<h:form id="cadastro">
+			<p:messages id="mensagensErros" styleClass="erros"></p:messages>
+			<h2>Novo Agendamento</h2>
+
+			<p:tabView>
+				<p:tab title="Agendamento">
+					<p:fieldset legend="Dados do Agendamento">
+						<h:outputLabel value="Data" for="data" />
+						<p:calendar id="data"
+							value="#{agendamentoBean.agendamento.data.time}"
+							pattern="dd/MM/yyyy">
+							<p:ajax event="dateSelect" update="vagas"></p:ajax>		
+						</p:calendar>
+
+						<h:outputLabel value="Horário" />
+						<p:selectOneMenu value="#{agendamentoBean.agendamento.horario}">
+							<f:selectItems
+								value="#{agendamentosDisponiveisBean.horariosDisponiveis(agendamentoBean.agendamento.data)}"
+								var="horario" itemValue="#{horario}" itemLabel="#{horario}" />
+								<p:ajax event="change" update="vagas"></p:ajax>
+						</p:selectOneMenu>
+						<br />
+
+						<h:outputLabel value="E-mail" for="email" />
+						<p:inputText id="email"
+							value="#{agendamentoBean.agendamento.email}" required="true" requiredMessage="Forneça um email!"/>
+
+						<h:outputLabel value="Número de Pessoas" />
+						<p:selectOneMenu id="vagas" value="#{agendamentoBean.vagas}">
+							<f:selectItems
+								value="#{agendamentosDisponiveisBean.vagasDisponiveis(agendamentoBean.agendamento.data, agendamentoBean.agendamento.horario)}"
+								var="vagas" itemValue="#{vagas}" itemLabel="#{vagas}" />
+						</p:selectOneMenu>
+						<br />
+						<br />
+
+						<p:commandButton id="finalizarButton"
+							value="Finalizar Agendamento" action="#{agendamentoBean.gravar}"/>
+					</p:fieldset>
+				</p:tab>
+				<p:tab title="Pessoas do Grupo">
+					<p:fieldset legend="Dados da Pessoa">
+						<h:outputLabel value="CPF" for="cpf" />
+						<p:inputMask id="cpf" value="#{agendamentoBean.pessoa.cpf}"
+							mask="999.999.999-99" required="true"
+							requiredMessage="Pessoa deve ter um CPF válido">
+							<f:validator validatorId="validaCpf"></f:validator>
+						</p:inputMask>
+
+						<h:outputLabel value="Nome" for="nome" />
+						<p:inputText id="nome" value="#{agendamentoBean.pessoa.nome}"
+							required="true" requiredMessage="Pessoa deve ter um nome válido" />
+
+						<h:outputLabel value="Tipo de Ingresso" for="tipoIngresso" />
+						<p:selectOneMenu id="tipoIngresso"
+							value="#{agendamentoBean.pessoa.tipoIngresso}">
+							<f:selectItems value="#{agendamentoBean.pessoa.tiposIngresso}"
+								var="tipos" itemValue="#{tipos}" itemLabel="#{tipos}" />
+						</p:selectOneMenu>
+						<br />
+
+						<p:commandButton id="guardarButton" value="Guardar Pessoa"
+							action="#{agendamentoBean.guardaPessoa}">
+							<f:ajax execute="@form" render=":listaPessoas"></f:ajax>
+						</p:commandButton>
+					</p:fieldset>
+				</p:tab>
+			</p:tabView>
+		</h:form>
+		<h:form id="listaPessoas">
+			<p:fieldset legend="Listagem de Pessoas">
+				<p:dataTable
+					value="#{agendamentoBean.agendamento.grupoPessoas}" var="pessoa"
+					styleClass="dados" rowClasses="impar, par">
+					<p:column headerText="CPF">
+						#{pessoa.cpf}
+					</p:column>
+
+					<p:column headerText="Nome">
+						#{pessoa.nome}
+					</p:column>
+
+					<p:column headerText="Tipo do Ingresso">
+						#{pessoa.tipoIngresso}
+					</p:column>
+					
+					<p:column headerText="Remover">
+						<h:commandLink action="#{agendamentoBean.remove(pessoa)}" value="Remover" styleClass="btn btn-danger">
+							<f:ajax render="@form"></f:ajax>
+						</h:commandLink>
+						<f:facet name="footer">
+                            <h:commandLink action="#{agendamentoBean.removeTodasPessoas()}" value="Remover Todas" styleClass="btn btn-danger">
+								<f:ajax render="@form"></f:ajax>
+							</h:commandLink>
+                        </f:facet>
+					</p:column>
+				</p:dataTable>
+			</p:fieldset>
+		</h:form>
+
+	</ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<ui:composition template="_template.xhtml">
+	<ui:define name="corpo">
+		<h:outputScript name="jsf.js" library="javax.faces" target="head"></h:outputScript>
+
+		<h:form id="cadastro">
+			<p:messages id="mensagensErros" styleClass="erros"></p:messages>
+			<h2>Administração do Museu</h2>
+
+			<p:tabView>
+				<p:tab title="Pessoas Agendadas">
+					<p:fieldset legend="Buscar por Data e Horário">
+						<h:outputLabel value="Data" for="data" />
+						<p:calendar id="data"
+							value="#{administracaoBean.agendamento.data.time}"
+							pattern="dd/MM/yyyy" required="true" requiredMessage="Fornça uma data!">
+							<p:ajax event="dateSelect" />
+						</p:calendar>
+
+						<h:outputLabel value="Horário" />
+						<p:selectOneMenu value="#{administracaoBean.agendamento.horario}">
+							<f:selectItems value="#{administracaoBean.horarios()}"
+								var="horario" itemValue="#{horario}" itemLabel="#{horario}" />
+							<p:ajax event="valueChange"></p:ajax>
+						</p:selectOneMenu>
+						<br /><br />
+
+						<p:commandButton id="gerarButton" value="Gerar Relatório"
+							action="#{administracaoBean.pessoasAgendadas}">
+							<f:ajax execute="@form" render=":listaPessoas"></f:ajax>
+						</p:commandButton>
+						<br />
+					</p:fieldset>
+				</p:tab>
+				<p:tab title="Visitas Diárias">
+					<p:fieldset legend="Visitas">
+						<h:outputLabel value="Data" for="dataVisita" />
+						<p:calendar id="dataVisita"
+							value="#{administracaoBean.dataVisita.time}"
+							pattern="dd/MM/yyyy">
+							<p:ajax event="change" update="numPessoas"></p:ajax>
+						</p:calendar>
+						<p:commandButton id="visitasButton" value="Verificar"
+							update="numPessoas">
+						</p:commandButton>
+						<br/><br/>
+												
+						<h:outputLabel value="Número de pessoas:" for="numPessoas" />
+						<p:inputText id="numPessoas"
+							value="#{administracaoBean.visitasDiarias()}" readonly="true"/>
+						
+					</p:fieldset>
+				</p:tab>
+			</p:tabView>
+		</h:form>
+		<h:form id="listaPessoas">
+			<p:fieldset legend="Comparecimentos">
+				<p:dataTable value="#{administracaoBean.pessoas}" var="pessoa"
+						styleClass="dados" rowClasses="impar, par">
+						<p:column headerText="CPF">
+									#{pessoa.cpf}
+								</p:column>
+
+						<p:column headerText="Nome">
+									#{pessoa.nome}
+								</p:column>
+
+						<p:column headerText="Tipo do Ingresso">
+									#{pessoa.tipoIngresso}
+								</p:column>
+
+						<p:column headerText="Compareceu">
+									#{pessoa.compareceu ? "Sim" : "Não"}
+								</p:column>
+
+						<p:column headerText="Alterar Comparecimento">
+							<h:commandLink
+								action="#{administracaoBean.alterarComparecimento(pessoa)}"
+								value="Alterar" styleClass="btn btn-danger">
+								<f:ajax execute="@form" render=":listaPessoas"></f:ajax>
+							</h:commandLink>
+						</p:column>
+					</p:dataTable>
+			</p:fieldset>
+		</h:form>
+
+		
+	</ui:define>
+</ui:composition>
+</html>

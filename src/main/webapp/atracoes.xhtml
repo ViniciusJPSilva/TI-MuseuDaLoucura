@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<ui:composition template="_template.xhtml">
+	<ui:define name="corpo">
+		<h:outputScript name="jsf.js" library="javax.faces" target="head"></h:outputScript>
+		<p:fieldset class="atracField" legend="O Museu da Loucura">
+			<h:graphicImage class="atracImagem " library="imagens"
+				name="fachada-museu.jpg" />
+			<p class="atracTexto posicaoDireita">O Hospital Colônia se tornou
+				um depósito de pessoas excluídas da sociedade. A maioria não tinha
+				qualquer problema mental. Muitos eram escondidos ali pelos
+				familiares, rejeitados, vítimas de abuso, homossexuais, alcoólatras,
+				epiléticos, pessoas que incomodaram de algum modo uma sociedade
+				intolerante... Suas mortes não eram sentidas, e estima-se que foram
+				cerca de 60 mil.</p>
+		</p:fieldset>
+		<br />
+		<br />
+		<p:fieldset class="atracField" legend="Atrações">
+			<div class="card">
+				<p:commandButton type="button" onclick="PF('switcher').previous()"
+					icon="pi pi-chevron-left" id="prev" styleClass="p-mr-2 p-mb-3 atracBotaoEsquerda" />
+				<p:commandButton type="button" onclick="PF('switcher').next()"
+					icon="pi pi-chevron-right" id="next" styleClass="p-mr-2 p-mb-3 atracBotaoDireita"/>
+					<br/>
+
+				<p:imageSwitch effect="wipe" widgetVar="switcher"
+					id="manuelSwitcher" slideshowAuto="false">
+					<ui:repeat value="#{imagensViewBean.imagens}" var="imagem"
+						id="manuelSwitcherImages">
+						<h:graphicImage class="atracImgPass " library="imagens"
+							name="#{imagem}" />
+					</ui:repeat>
+				</p:imageSwitch>
+			</div>
+		</p:fieldset>
+	</ui:define>
+</ui:composition>
+</html>

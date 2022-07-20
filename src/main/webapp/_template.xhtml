@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	<title>Museu da Loucura</title>
+	<h:outputStylesheet library="css" name="style.css" />
+</h:head>
+<h:body>
+	<div id="cabecalho">
+		<h:graphicImage library="imagens" name="logo-museu.png" id="logoCompany" />
+		<div id="usuarioLogado">
+			<h:form rendered="#{not empty loginBean.usuario.login}">
+				<h:outputText value="Logado como: #{loginBean.usuario.login}" />
+			</h:form>
+		</div> 
+	</div>
+
+	<div id="conteudo">
+		<h:form>
+			<p:menubar>
+				<p:menuitem value="Atrações" url="atracoes.xhtml" />
+
+				<p:submenu label="Agendamentos">
+					<p:menuitem value="Agendar" url="agendamento.xhtml" />
+					<p:menuitem value="Cancelar" url="cancelamento.xhtml" />
+				</p:submenu>
+				
+				<p:menuitem value="Login" url="login.xhtml" rendered="#{empty loginBean.usuario.login}" />
+				<p:menuitem value="Administração" url="admin.xhtml" rendered="#{not empty loginBean.usuario.login}" />
+				<p:menuitem value="Sair" action="#{loginBean.logout()}" rendered="#{not empty loginBean.usuario.login}" />
+			</p:menubar>
+		</h:form>
+
+		<ui:insert name="corpo" />
+	</div>
+
+	<div id="rodape">
+		Copyright 2022. Todos os Direitos reservados a Vinícius.
+	</div>
+
+</h:body>
+</html>

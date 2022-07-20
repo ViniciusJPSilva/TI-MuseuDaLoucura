@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<ui:composition template="_template.xhtml">
+	<ui:define name="corpo">
+		<h:outputScript name="jsf.js" library="javax.faces" target="head" />
+
+		<h:form id="cadastro">
+			<p:messages id="mensagensErros" styleClass="erros"></p:messages>
+			<h2>Cancelar Agendamento</h2>
+			
+			<p:fieldset title="Buscar">
+				<h:outputLabel value="Código" for="hash" />
+				<p:inputText id="hash" value="#{agendamentoBean.agendamento.hash}" />
+				
+				<h:outputLabel value="E-mail" for="email" />
+				<p:inputText id="email" value="#{agendamentoBean.agendamento.email}" />
+				<br/>
+				
+				<p:commandButton id="buscarButton" value="Buscar Agendamento" action="#{agendamentoBean.buscarCancelamento}">
+					<f:ajax execute="@form" render=":listaPessoas"></f:ajax>
+				</p:commandButton><br/>
+			</p:fieldset>
+		</h:form>
+		<h:form id="listaPessoas">
+			<p:fieldset legend="Listagem de Pessoas">
+				<p:dataTable
+					value="#{agendamentoBean.agendamento.grupoPessoas}" var="pessoa"
+					styleClass="dados" rowClasses="impar, par">
+					<p:column headerText="CPF">
+						#{pessoa.cpf}
+					</p:column>
+
+					<p:column headerText="Nome">
+						#{pessoa.nome}
+					</p:column>
+
+					<p:column headerText="Tipo do Ingresso">
+						#{pessoa.tipoIngresso}
+					</p:column>
+					
+					<p:column headerText="Remover">
+						<h:commandLink action="#{agendamentoBean.removeBD(pessoa)}" value="Remover" styleClass="btn btn-danger">
+							<f:ajax render="@form"></f:ajax>
+						</h:commandLink>
+					</p:column>
+				</p:dataTable>
+			</p:fieldset>
+		</h:form>
+
+		<p:commandButton id="cancelarButton" value="Cancelamento Total" action="#{agendamentoBean.cancelar}"/>
+	</ui:define>
+</ui:composition>
+</html>
